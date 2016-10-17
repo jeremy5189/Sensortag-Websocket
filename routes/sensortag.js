@@ -5,8 +5,7 @@ var express   = require('express'),
 	SensorTag = require('sensortag'),
 	device_info  = {}, // Global device recorder
 	_tag		 = {}, // Global tag accessor
-	_log_every   = false,
-	time_to_connect = 7000; // Time to stop discover
+	_log_every   = false;
 
 global.logging('Sensortag module loaded');
 
@@ -231,6 +230,7 @@ function tagDiscovery(tag) {
     	global.logging('Device Info');
     	console.log(device_info[tag.uuid]);
 
+    	// Set up watch dog
     	setTimeout(watchDog, timeoutVar);
     }
 
