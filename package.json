@@ -8,5 +8,11 @@
     "type": "git"
   },
   "author": "Jeremy Yen <jeremy5189@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-ws": "^2.0.0",
+    "moment": "^2.15.1",
+    "sensortag": "^1.2.3",
+  }
 }
