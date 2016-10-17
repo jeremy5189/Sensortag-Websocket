@@ -1,0 +1,12 @@
+{
+  "name": "Sensortag-Websocket",
+  "version": "1.0.0",
+  "description": "Example of feeding sensortag data into websocket",
+  "main": "app.js",
+  "repository": {
+    "url": "git@github.com:jeremy5189/Sensortag-Websocket.git",
+    "type": "git"
+  },
+  "author": "Jeremy Yen <jeremy5189@gmail.com>",
+  "license": "MIT"
+}
