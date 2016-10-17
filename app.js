@@ -8,6 +8,9 @@ var express  = require('express'),
 // Web Socket Support
 var expressWs = require('express-ws')(app);
 
+// View Engline
+app.set('view engine', 'ejs');
+
 // Logging Function
 global.logging = function (str) {
 
@@ -31,13 +34,16 @@ var allowCrossDomain = function(req, res, next) {
 // ------------------
 var sensortag = require('./routes/sensortag');
 app.use('/sensortag', sensortag);
+app.use('/static', express.static('public'));
 app.use(allowCrossDomain);
 
 // ------------------
 // Index 
 // ------------------
 app.get('/', function (req, res) {
-    res.send('Hello');
+    res.render('dev-list', {
+        title: 'Device List'
+    });
 });
 
 // ------------------
