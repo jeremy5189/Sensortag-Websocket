@@ -56,12 +56,12 @@
 
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Sensor 狀態</div>
+                    <div class="panel-heading">Sensor Status</div>
                     <div class="panel-body">
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <td>狀態</td>
+                                    <td>Status</td>
                                     <td id="dev-status">Loading...</td>
                                 </tr>
                                 <tr>
@@ -73,11 +73,11 @@
                                     <td id="dev-uuid"></td>
                                 </tr>
                                 <tr>
-                                    <td>型號</td>
+                                    <td>Type</td>
                                     <td id="dev-type"></td>
                                 </tr>
                                 <tr>
-                                    <td>藍芽位址</td>
+                                    <td>Address</td>
                                     <td id="dev-address"></td>
                                 </tr>
                             </tbody>
@@ -88,7 +88,7 @@
 
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">溫度<span id="label-temp" class="label label-default pull-right">Loading</span></div>
+                    <div class="panel-heading">Tempature<span id="label-temp" class="label label-default pull-right">Loading</span></div>
                     <div class="panel-body chart-container">
                         <div id="chart-temp" class="chart-div"></div>
                     </div>
@@ -97,7 +97,7 @@
 
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">相對濕度<span id="label-humidity" class="label label-default pull-right">Loading</span></div>
+                    <div class="panel-heading">Humidity<span id="label-humidity" class="label label-default pull-right">Loading</span></div>
                     <div class="panel-body chart-container">
                         <div id="chart-humidity" class="chart-div"></div>
                     </div>
@@ -109,7 +109,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">紅外線溫度<span id="label-irtemp" class="label label-default pull-right">Loading</span></div>
+                    <div class="panel-heading">IR Tempature<span id="label-irtemp" class="label label-default pull-right">Loading</span></div>
                     <div class="panel-body chart-container">
                         <div id="chart-irtemp" class="chart-div"></div>
                     </div>
@@ -117,7 +117,7 @@
             </div>
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">大氣壓力<span id="label-bar" class="label label-default pull-right">Loading</span></div>
+                    <div class="panel-heading">Pressure<span id="label-bar" class="label label-default pull-right">Loading</span></div>
                     <div class="panel-body chart-container">
                         <div id="chart-bar" class="chart-div"></div>
                     </div>
@@ -125,7 +125,7 @@
             </div>
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading">裝置溫度<span id="label-devtemp" class="label label-default pull-right">Loading</span></div>
+                    <div class="panel-heading">Object Temperature<span id="label-devtemp" class="label label-default pull-right">Loading</span></div>
                     <div class="panel-body chart-container">
                         <div id="chart-devtemp" class="chart-div"></div>
                     </div>
@@ -152,19 +152,19 @@
 
         var connected = new WebSocket('ws://<%=websocket_address %>/sensortag/connected');
         connected.onclose = function() {
-            $('#dev-status').html('<span class="label label-danger">斷線</button>');
+            $('#dev-status').html('<span class="label label-danger">Disconnected</button>');
         }
         connected.onerror = function() {
-            $('#dev-status').html('<span class="label label-danger">斷線</button>');
+            $('#dev-status').html('<span class="label label-danger">Disconnected</button>');
         }
         connected.onmessage = function (event) {
             var data = JSON.parse(event.data);
             if( data[UUID] == undefined ) {
                 // Not connected
-                $('#dev-status').html('<span class="label label-danger">斷線</button>');
+                $('#dev-status').html('<span class="label label-danger">Disconnected</button>');
             }
             else {
-                $('#dev-status').html('<span class="label label-success">已連接</span>');
+                $('#dev-status').html('<span class="label label-success">Connected</span>');
                 for( var key in data[UUID] ) {
                     $('#dev-' + key).html(data[UUID][key]);
                 }
@@ -229,12 +229,12 @@
 
         var update_label = function(label_id, connected) {
             if(connected) {
-                $('#' + label_id).html('已連接');
+                $('#' + label_id).html('Connected');
                 $('#' + label_id).removeClass('label-default');
                 $('#' + label_id).removeClass('label-danger');
                 $('#' + label_id).addClass('label-success');
             } else {
-                $('#' + label_id).html('未連接');
+                $('#' + label_id).html('Disconnected');
                 $('#' + label_id).removeClass('label-default');
                 $('#' + label_id).removeClass('label-success');
                 $('#' + label_id).addClass('label-danger');
