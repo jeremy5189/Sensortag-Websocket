@@ -18,9 +18,8 @@ var EventEmitter = require('events').EventEmitter,
 SensorTag.SCAN_DUPLICATES = true;
 
 // Timeout Variables
-// Discovering is limited to timeoutVar
-var timeoutVar = 7000;
-var timeoutWaiting = false;
+var timeoutVar = 6000;
+var scanning = false;
 
 // Handle Exception
 process.on('uncaughtException', function(err) {
@@ -187,17 +186,12 @@ function tagDiscovery(tag) {
 	// Stop Bluetooth discovering
 	stop_discover();
 
-	// wait timeoutVar and resume
-	timeoutWaiting = true;
-
-	setTimeout(function() {
-		start_discover();
-	}, timeoutVar);
-
 	global.logging('discovered: ' + tag.address + ', type = ' + tag.type);
 
 	// connect me this tag
 	connectAndSetUpMe();
+
+	var watchDogFlag = true;
 
 	tag.on('disconnect', function() {
 
@@ -209,7 +203,20 @@ function tagDiscovery(tag) {
 		// Emit Disconnected Event
 		events.emit('device_disconnect');
 
+		// Resume scanning or wait
+	    //if (timeoutCleared) {
+	    start_discover();
+	    //}
 	});
+
+	function watchDog() {
+
+		if(watchDogFlag) {
+
+			global.logging('watchDog invoked, force disconnected');
+			tag.disconnect();
+		}
+	}
 
 	function connectAndSetUpMe() {			
     	
@@ -225,6 +232,8 @@ function tagDiscovery(tag) {
 
     	global.logging('Device Info');
     	console.log(device_info[tag.uuid]);
+
+    	setTimeout(watchDog, timeoutVar);
     }
 
     function enableService(error) {		
@@ -254,6 +263,12 @@ function tagDiscovery(tag) {
     	});
 
     	tag.notifySimpleKey(listenForButton);
+
+    	// Mark connected
+    	watchDogFlag = false;
+
+    	// Resume Scan
+    	start_discover();
     }
 
 	// when you get a button change, print it out:
@@ -281,18 +296,19 @@ function tagDiscovery(tag) {
 
 function start_discover() {
 
-	if(timeoutWaiting)
+	if(scanning)
 		return;
 
+	scanning = true;
 	global.logging('scanTimed: Start discovering');
 	SensorTag.discover(tagDiscovery);
 }
 
 function stop_discover() {
 
-	global.logging('stopTimed: Stop discovering');
+	scanning = false;
 	SensorTag.stopDiscoverAll(function(){});
-	timeoutWaiting = false;
+	global.logging('stopTimed: Stop discovering');
 }
 
 // Start discovering
