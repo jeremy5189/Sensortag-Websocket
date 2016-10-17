@@ -19,9 +19,8 @@ SensorTag.SCAN_DUPLICATES = true;
 
 // Timeout Variables
 // Discovering is limited to timeoutVar
-var timeoutVar = 60000;
-var timeoutHandle;
-var timeoutCleared = true;
+var timeoutVar = 7000;
+var timeoutWaiting = false;
 
 // Handle Exception
 process.on('uncaughtException', function(err) {
@@ -186,10 +185,13 @@ router.ws('/irTemperature/:uuid', function(ws, req) {
 function tagDiscovery(tag) {
 
 	// Stop Bluetooth discovering
-	stopTimed();
+	stop_discover();
 
-	timeoutHandle = setTimeout(function() {
-		scanTimed();
+	// wait timeoutVar and resume
+	timeoutWaiting = true;
+
+	setTimeout(function() {
+		start_discover();
 	}, timeoutVar);
 
 	global.logging('discovered: ' + tag.address + ', type = ' + tag.type);
@@ -207,10 +209,6 @@ function tagDiscovery(tag) {
 		// Emit Disconnected Event
 		events.emit('device_disconnect');
 
-		// Resume scanning or wait
-	    if (timeoutCleared) {
-	      scanTimed();
-	    }
 	});
 
 	function connectAndSetUpMe() {			
@@ -256,9 +254,6 @@ function tagDiscovery(tag) {
     	});
 
     	tag.notifySimpleKey(listenForButton);
-
-    	// Resume Scan
-    	scanTimed();
     }
 
 	// when you get a button change, print it out:
@@ -268,12 +263,10 @@ function tagDiscovery(tag) {
 
 			if (left) {
 				global.logging(tag.address + '(' + tag.type +')> left: ' + left);
-				global.run_cmd(DOC_ROOT + '/scripts/lock.sh', [], function(){});
 			}
 
 			if (right) {
 				global.logging(tag.address + '(' + tag.type +')> right: ' + right);
-				global.run_cmd(DOC_ROOT + '/scripts/unlock.sh', [], function(){});
 			}
 
 			// if both buttons are pressed, disconnect:
@@ -286,20 +279,23 @@ function tagDiscovery(tag) {
 
 }
 
-function scanTimed() {
+function start_discover() {
+
+	if(timeoutWaiting)
+		return;
+
 	global.logging('scanTimed: Start discovering');
-	timeoutCleared = false;
 	SensorTag.discover(tagDiscovery);
 }
 
-function stopTimed() {
-	SensorTag.stopDiscoverAll(function(){});
-	timeoutCleared = true;
+function stop_discover() {
+
 	global.logging('stopTimed: Stop discovering');
-	clearTimeout(timeoutHandle);
+	SensorTag.stopDiscoverAll(function(){});
+	timeoutWaiting = false;
 }
 
 // Start discovering
-scanTimed();
+start_discover();
 
 module.exports = router;
