@@ -17,8 +17,8 @@ var EventEmitter = require('events').EventEmitter,
 // Duplicates allowed -> Reconnect possible
 SensorTag.SCAN_DUPLICATES = true;
 
-// Timeout Variables
-var timeoutVar = 6000;
+// Timeout for watchdog 
+var timeoutVar = 7000;
 var scanning = false;
 
 // Handle Exception
@@ -203,10 +203,8 @@ function tagDiscovery(tag) {
 		// Emit Disconnected Event
 		events.emit('device_disconnect');
 
-		// Resume scanning or wait
-	    //if (timeoutCleared) {
+		// Resume scanning
 	    start_discover();
-	    //}
 	});
 
 	function watchDog() {
@@ -247,6 +245,7 @@ function tagDiscovery(tag) {
 		// Emit connected Devent
 		events.emit('device_connect');
 
+		// Map tag to global for ws
 		_tag[tag.uuid] = tag;
 
 		// Enable Service
