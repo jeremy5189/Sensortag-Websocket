@@ -11,12 +11,14 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "bplist-parser": "^0.1.1",
     "express": "^4.14.0",
     "express-ws": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-copy": "^0.0.2",
     "jquery": "^3.1.1",
     "moment": "^2.15.1",
-    "sensortag": "^1.2.3"
+    "sensortag": "^1.2.3",
+    "xpc-connection": "^0.1.4"
   }
 }
