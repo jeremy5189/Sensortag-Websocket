@@ -188,6 +188,10 @@ function tagDiscovery(tag) {
 	// Stop Bluetooth discovering
 	stopTimed();
 
+	timeoutHandle = setTimeout(function() {
+		scanTimed();
+	}, timeoutVar);
+
 	global.logging('discovered: ' + tag.address + ', type = ' + tag.type);
 
 	// connect me this tag
@@ -196,7 +200,6 @@ function tagDiscovery(tag) {
 	tag.on('disconnect', function() {
 
 		global.logging(tag.address + '(' + tag.type +') disconnected!');
-		global.sound('sensortag_disconnected');
 
 		// Remove Property
 		delete device_info[tag.uuid];
@@ -233,7 +236,6 @@ function tagDiscovery(tag) {
 		}
 
 		global.logging(tag.address + '(' + tag.type +') enableService');
-		global.sound('enable_sensortag_services');
 
 		// Emit connected Devent
 		events.emit('device_connect');
@@ -288,9 +290,6 @@ function scanTimed() {
 	global.logging('scanTimed: Start discovering');
 	timeoutCleared = false;
 	SensorTag.discover(tagDiscovery);
-	timeoutHandle = setTimeout(function() {
-		stopTimed();
-	}, timeoutVar);
 }
 
 function stopTimed() {
