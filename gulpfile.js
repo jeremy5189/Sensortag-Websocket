@@ -9,8 +9,11 @@ gulp.task('default', function() {
 		   		'node_modules/bootstrap/dist/js/**/*.js',
 		   		'node_modules/bootstrap/dist/fonts/**/*',
 		   		'node_modules/jquery/dist/**/*.js',
-		   		'node_modules/jquery/dist/**/*.map'
-		   ]).pipe(copy('public/')).pipe(verify());
+		   		'node_modules/jquery/dist/**/*.map',
+                'node_modules/highcharts/*.js',
+                'node_modules/sprintf-js/dist/*.min.js',
+                'node_modules/sprintf-js/dist/*.min.js.map'
+		   ]).pipe(copy('public')).pipe(verify());
 })
 
 function verify ()
