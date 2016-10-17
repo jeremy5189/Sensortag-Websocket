@@ -3,7 +3,8 @@
 // ------------------
 var express  = require('express'),
     app      = express(),
-    PORT     = 3000;
+    PORT     = 3000,
+    ws_address = '127.0.0.1:3000',
 
 // Web Socket Support
 var expressWs = require('express-ws')(app);
@@ -43,7 +44,7 @@ app.use(allowCrossDomain);
 app.get('/', function (req, res) {
     res.render('index', {
         title: 'Device List',
-        websocket_address: '127.0.0.1:3000'
+        websocket_address: ws_address
     });
 });
 
@@ -53,7 +54,7 @@ app.get('/', function (req, res) {
 app.get('/sensor/:uuid', function (req, res) {
     res.render('sensor', {
         title: 'Sensor',
-        websocket_address: '127.0.0.1:3000',
+        websocket_address: ws_address,
         uuid: req.params.uuid
     });
 });
