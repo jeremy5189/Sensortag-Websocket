@@ -54,6 +54,51 @@
     <!-- Scripts -->
     <script src="/static/node_modules/jquery/dist/jquery.js"></script>
     <script src="/static/node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script>
 
+    var device_panel = '<div class="panel panel-info">' +
+        '<div class="panel-heading"><span class="glyphicon glyphicon-record"></span> Sensortag</div>' +
+        '<div class="panel-body">' +
+        '<span class="label label-info">%s</span>&nbsp;' +
+        '<span class="label label-info">%s</span>' +
+        '<button class="btn btn-default btn-sm btn-view pull-right" data-uuid="%s">View</button>'+
+        '</div>' +
+    '</div>';
+
+    $(function(){
+
+        var info = new WebSocket('ws://<%=websocket_address %>/sensortag/connected');
+
+        info.onclose = function() {
+            $('#dev-status').html('<span class="label label-danger">Connected</button>');
+        }
+
+        info.onerror = function() {
+            $('#dev-status').html('<span class="label label-danger">Disconnected</button>');
+        }
+
+        info.onmessage = function (event) {
+
+            var device = JSON.parse(event.data);
+
+            console.log(device);
+
+            if( Object.keys(device).length === 0 )
+                $('#dev-status').html('<span class="label pull-right label-sm label-warning">No Device</button>');
+
+            $('#device-panel').html('');
+            for( var uuid in device ) {
+                $('#device-panel').append(sprintf(device_panel, device[uuid].type, device[uuid].address, uuid));
+            }
+        }
+
+        $(document).on('click', '.btn-view', function(event) {
+
+            var uuid = $(this).data('uuid');
+            console.log('View %s', uuid);
+            location.href = '/tag/' + uuid;
+        });
+    });
+    </script>
 </body>
 </html>

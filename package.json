@@ -17,7 +17,6 @@
     "express-ws": "^2.0.0",
     "gulp": "^3.9.1",
     "gulp-copy": "^0.0.2",
-    "highcharts": "^v5.0.0",
     "jquery": "^3.1.1",
     "moment": "^2.15.1",
     "sensortag": "^1.2.3",

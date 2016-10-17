@@ -41,8 +41,20 @@ app.use(allowCrossDomain);
 // Index 
 // ------------------
 app.get('/', function (req, res) {
-    res.render('dev-list', {
-        title: 'Device List'
+    res.render('index', {
+        title: 'Device List',
+        websocket_address: '127.0.0.1:3000'
+    });
+});
+
+// ------------------
+// Single tag 
+// ------------------
+app.get('/sensor/:uuid', function (req, res) {
+    res.render('sensor', {
+        title: 'Sensor',
+        websocket_address: '127.0.0.1:3000',
+        uuid: req.params.uuid
     });
 });
 
