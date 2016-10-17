@@ -4,7 +4,7 @@
 var express  = require('express'),
     app      = express(),
     PORT     = 3000,
-    ws_address = '127.0.0.1:3000',
+    ws_address = '127.0.0.1:3000';
 
 // Web Socket Support
 var expressWs = require('express-ws')(app);
